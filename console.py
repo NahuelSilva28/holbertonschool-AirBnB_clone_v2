@@ -118,7 +118,7 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        elif args.split()[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
         else:
@@ -127,7 +127,8 @@ class HBNBCommand(cmd.Cmd):
                 if "=" in arg:
                     key, value = arg.split("=")
                     if value[0] == '"' and value[-1] == '"':
-                        value = value[1:-1].replace("_", " ")
+                        value = value[1:-1].replace("_", " ") \
+                            .replace('\\"', '"')
                     elif "." in value:
                         value = float(value)
                     else:
