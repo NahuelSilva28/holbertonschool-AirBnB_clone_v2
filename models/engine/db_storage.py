@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 from os import getenv
 from sqlalchemy import create_engine
-from models.base_model import Base
-from sqlalchemy.orm import sessionmaker
+from models.base_model import BaseModel, Base
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 
 class DBStorage():
@@ -29,7 +29,56 @@ class DBStorage():
         from models.city import City
         from models.amenity import Amenity
         from models.review import Review
+
+        classes = {
+            'User': User, 'Place': Place,
+            'State': State, 'City': City, 'Amenity': Amenity,
+            'Review': Review
+            }
+
         Session = sessionmaker()
         self.__session = Session()
-        if cls is None:
-            
+
+        ret = {}
+
+        if type(cls) is not str:
+            cls = cls.__name__
+        if cls:
+            for obj in self.__session.query(classes[cls]):
+                ret[cls + '.' + obj.id] = obj
+        else:
+            for k in classes.keys():
+                for obj in self.__session.query(classes[k]):
+                    ret[k + '.' + obj.id] = obj
+        return ret
+
+    def new(self, obj):
+        """add a new object to the data base"""
+        self.__session.add(obj)
+
+    def save(self):
+        """commit all change"""
+        self.__session.commit()
+
+    def delete(self, obj=None):
+        """delete an object if not null"""
+        if obj:
+            self.__session.delete(obj)
+
+    def reload(self):
+        """reload all the objets"""
+        from models.user import User
+        from models.place import Place
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.review import Review
+
+        Base.metadata.create_all(self.__engine)
+
+        ses = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        self.__session = scoped_session(ses)
+
+    def close(self):
+        """Closes the session"""
+        self.__session.close()
