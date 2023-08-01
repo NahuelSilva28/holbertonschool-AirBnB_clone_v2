@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-from os import getenv
-from sqlalchemy import create_engine
+from os import environ
+from sqlalchemy import create_engine, text
 from models.base_model import BaseModel, Base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
@@ -12,13 +12,13 @@ class DBStorage():
 
     def __init__(self):
         """instantiation"""
-        user = getenv('HBNB_MYSQL_USER')
-        pwd = getenv('HBNB_MYSQL_PWD')
-        host = getenv('HBNB_MYSQL_HOST')
-        db = getenv('HBNB_MYSQL_DB')
-        self.__engine = create_engine(f'mysql+mysqldb:\
-                        //{user}:{pwd}@{host}/{db}', pool_pre_ping=True)
-        if getenv("HBNB_ENV") == "test":
+        user = environ.get('HBNB_MYSQL_USER')
+        pw = environ.get('HBNB_MYSQL_PWD')
+        ht = environ.get('HBNB_MYSQL_HOST')
+        db = environ.get('HBNB_MYSQL_DB')
+        self.__engine = create_engine(f'mysql+mysqldb://{user}:{pw}@{ht}/{db}',
+                                      pool_pre_ping=True)
+        if environ.get("HBNB_ENV") == "test":
             Base.metadata.drop(self.__engine)
 
     def all(self, cls=None):
@@ -31,25 +31,23 @@ class DBStorage():
         from models.review import Review
 
         classes = {
-            'User': User, 'Place': Place,
-            'State': State, 'City': City, 'Amenity': Amenity,
-            'Review': Review
+            'State': State, 'City': City
             }
 
-        Session = sessionmaker()
+        Session = sessionmaker(bind=self.__engine)
         self.__session = Session()
 
         ret = {}
 
-        if type(cls) is not str:
-            cls = cls.__name__
         if cls:
+            if type(cls) is not str:
+                cls = cls.__name__
             for obj in self.__session.query(classes[cls]):
-                ret[cls + '.' + obj.id] = obj
+                ret[str(cls) + '.' + obj.id] = obj
         else:
             for k in classes.keys():
                 for obj in self.__session.query(classes[k]):
-                    ret[k + '.' + obj.id] = obj
+                    ret[str(k) + '.' + obj.id] = obj
         return ret
 
     def new(self, obj):
