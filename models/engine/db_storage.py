@@ -32,7 +32,8 @@ class DBStorage():
 
         classes = {
             'State': State, 'City': City, 'User': User,
-            'Place': Place, 'Amenity': Amenity
+            'Place': Place, 'Amenity': Amenity, 'Review':
+                Review
             }
 
         Session = sessionmaker(bind=self.__engine)
