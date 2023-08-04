@@ -4,6 +4,7 @@ from models.base_model import BaseModel, Base
 from os import getenv
 from sqlalchemy import Table, Column, String, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declared_attr
 
 place_amenity = Table('place_amenity', Base.metadata,
                       Column('place_id', String(60),
@@ -31,11 +32,11 @@ class Place(BaseModel, Base):
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
     amenity_ids = []
-
     if getenv('HBNB_TYPE_STORAGE') == 'db':
         reviews = relationship("Review", cascade="all, delete-orphan",
                                backref='places')
-        amenities = relationship("Amenity", secondary=place_amenity,
+        amenities = relationship("Amenity",
+                                 secondary=place_amenity,
                                  back_populates='place_amenities',
                                  viewonly=False)
     else:
