@@ -31,7 +31,8 @@ class DBStorage():
         from models.review import Review
 
         classes = {
-            'State': State, 'City': City
+            'State': State, 'City': City, 'User': User,
+            'Place': Place, 'Amenity': Amenity
             }
 
         Session = sessionmaker(bind=self.__engine)
