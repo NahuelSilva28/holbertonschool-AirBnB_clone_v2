@@ -80,5 +80,5 @@ class DBStorage():
         self.__session = scoped_session(ses)
 
     def close(self):
-        """Closes the session"""
+        """Closes the private session attribute"""
         self.__session.close()
