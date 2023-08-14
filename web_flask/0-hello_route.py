@@ -5,7 +5,7 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 
 
-@app.route("/")
+@app.route("/", strict_slashes=False)
 def hbnb():
     "Display 'Hello, HBNB!'"
     return "<p>Hello HBNB!</p>"
