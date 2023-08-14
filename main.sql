@@ -3,7 +3,7 @@ USE hbnb_dev_db;
 
 DELETE FROM `states`;
 
-INSERT INTO `states` VALUES 
+INSERT INTO `states` (id, created_at, updated_at, name) VALUES
     ('421a55f4-7d82-47d9-b51c-a76916479545','2016-03-25 19:42:40','2016-03-25 19:42:40','stateA'),
     ('421a55f4-7d82-47d9-b51c-a76916479546','2016-03-25 19:42:40','2016-03-25 19:42:40','stateB'),
     ('421a55f4-7d82-47d9-b52c-a76916479547','2016-03-25 19:42:40','2016-03-25 19:42:40','stateC'),
