@@ -22,3 +22,7 @@ class test_City(test_basemodel):
         """ """
         new = self.value()
         self.assertEqual(type(new.name), str)
+
+    def test_isinstance(self):
+        new_city = City()
+        self.assertIsInstance(new_city. City())
