@@ -7,14 +7,9 @@ app = Flask(__name__)
 
 
 @app.teardown_appcontext
-def remove_session(x):
+def app_teardown_appcontext(self):
+    "Close the session after each Request"
     storage.close()
-
-
-@app.route("/states_list", strict_slashes=False)
-def states_list():
-    return render_template("7-states_list.html",
-                           states=storage.all(State).values())
 
 
 @app.route("/cities_by_states", strict_slashes=False)
