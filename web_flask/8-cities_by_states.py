@@ -2,6 +2,7 @@
 """List of states"""
 from flask import Flask, render_template
 from models import storage
+from models.state import State
 app = Flask(__name__)
 
 
@@ -13,13 +14,13 @@ def remove_session(x):
 @app.route("/states_list", strict_slashes=False)
 def states_list():
     return render_template("7-states_list.html",
-                           instances=storage.all().values())
+                           states=storage.all(State).values())
 
 
 @app.route("/cities_by_states", strict_slashes=False)
 def cities_by_states():
     return render_template("8-cities_by_states.html",
-                           instances=storage.all().values())
+                           states=storage.all(State).values())
 
 
 if __name__ == "__main__":
